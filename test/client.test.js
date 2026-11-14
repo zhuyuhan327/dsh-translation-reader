@@ -376,7 +376,9 @@ test('面板渲染结构与快照基线一致', async t => {
   }
   let expected;
   try {
-    expected = readFileSync(snapshotPath, 'utf8');
+    // Git may check the baseline out with CRLF on Windows; the renderer always
+    // produces LF, so normalize before comparing.
+    expected = readFileSync(snapshotPath, 'utf8').replace(/\r\n/g, '\n');
   } catch {
     assert.fail('缺少快照基线 test/client-tree.snap.txt，先以 UPDATE_SNAPSHOT=1 生成。');
   }
